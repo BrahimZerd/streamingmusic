@@ -13,6 +13,8 @@ interface AudioPlayerContextType {
   isPlaying: boolean;
   play: (track: Track | null) => void;
   pause: () => void;
+  next: () => void;
+  previous: () => void;
   togglePlay: () => void;
   mocked: Track[];
 }
@@ -29,11 +31,13 @@ interface AudioPlayerProviderType {
 
 const AudioPlayerContext = createContext<AudioPlayerContextType>({
   currentTrack: null,
-  mocked: [],
   isPlaying: false,
   play: () => {},
   pause: () => {},
+  next: () => {},
+  previous: () => {},
   togglePlay: () => {},
+  mocked: [],
 });
 
 export const useAudioPlayer = () => useContext(AudioPlayerContext);
@@ -63,9 +67,45 @@ export const AudioPlayerProvider = ({ children }: AudioPlayerProviderType) => {
     setIsPlaying((prevIsPlaying) => !prevIsPlaying);
   };
 
+  const next = () => {
+    if (currentTrack) {
+      const currentIndex = mocked.findIndex(
+        (track) => track.url === currentTrack.url
+      );
+      const nextIndex = (currentIndex + 1) % mocked.length;
+      setCurrentTrack(mocked[nextIndex]);
+    }
+    pause();
+  };
+
+  const previous = () => {
+    if (currentTrack) {
+      const currentIndex = mocked.findIndex(
+        (track) => track.url === currentTrack.url
+      );
+      if (currentIndex === 0) {
+        const prevIndex = mocked.length;
+        setCurrentTrack(mocked[prevIndex]);
+      } else {
+        const prevIndex = (currentIndex - 1) % mocked.length;
+        setCurrentTrack(mocked[prevIndex]);
+      }
+    }
+    pause();
+  };
+
   return (
     <AudioPlayerContext.Provider
-      value={{ mocked, currentTrack, isPlaying, play, pause, togglePlay }}
+      value={{
+        mocked,
+        currentTrack,
+        isPlaying,
+        play,
+        pause,
+        togglePlay,
+        next,
+        previous,
+      }}
     >
       {children}
     </AudioPlayerContext.Provider>

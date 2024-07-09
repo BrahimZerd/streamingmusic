@@ -2,24 +2,43 @@ import React, { useEffect, useRef, useState } from "react";
 import { useAudioPlayer } from "../context/AudioPlayerContext";
 
 export default function AudioControl() {
-  const { currentTrack, isPlaying, play, pause } = useAudioPlayer();
+  const { currentTrack, isPlaying, next } = useAudioPlayer();
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [trackProgress, setTrackProgress] = useState(0);
   const [trackDuration, setTrackDuration] = useState(0);
-
+  const [minutes, setMinutes] = useState<number>(0);
+  const [seconds, setSeconds] = useState<number>();
   useEffect(() => {
     if (audioRef.current) {
-      if (!audioRef.current.src && currentTrack) {
+      if (currentTrack) {
         audioRef.current.src = currentTrack.url;
+        audioRef.current.load(); // Ajoutez cette ligne pour charger la nouvelle source
       }
 
       if (isPlaying) {
-        audioRef.current.play();
+        console.log(currentTrack);
+        audioRef.current.play().catch((e) => console.error(e)); // Ajouter un catch pour les erreurs de lecture
       } else {
         audioRef.current.pause();
       }
     }
   }, [currentTrack, isPlaying]);
+
+  useEffect(() => {
+    if (audioRef.current) {
+      const handleEnded = () => {
+        next(); // Passe à la piste suivante lorsque la piste actuelle est terminée
+      };
+
+      audioRef.current.addEventListener("ended", handleEnded);
+      return () => {
+        if (audioRef.current) {
+          audioRef.current.removeEventListener("ended", handleEnded);
+        }
+      };
+    }
+  }, [next]);
+
   const handleTimeUpdate = () => {
     if (audioRef.current) {
       setTrackProgress(audioRef.current.currentTime);
@@ -39,6 +58,14 @@ export default function AudioControl() {
     }
   };
 
+  useEffect(() => {
+    if (audioRef.current?.currentTime) {
+      let globalSeconds = audioRef.current.currentTime;
+      setSeconds(globalSeconds % 60);
+      setMinutes(Math.floor(globalSeconds / 60));
+    }
+  });
+
   return (
     <div className="audio-player">
       <audio
@@ -47,14 +74,24 @@ export default function AudioControl() {
         onLoadedMetadata={handleDurationChange}
       />
       <div className="controls">
-        <span>{trackProgress.toFixed(2)}</span>
         <input
           type="range"
           value={trackProgress}
           max={trackDuration}
+          className="w-5/6"
           onChange={handleSliderChange}
         />
-        <span>{trackDuration.toFixed(2)}</span>
+        <div className="flex justify-between ml-9">
+          <span className="text-gray-400">
+            {trackProgress
+              ? `0${minutes}:${
+                  seconds && seconds <= 10
+                    ? 0 + seconds?.toFixed(0)
+                    : seconds?.toFixed(0)
+                }`
+              : "00:00"}
+          </span>
+        </div>
       </div>
     </div>
   );

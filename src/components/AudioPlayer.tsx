@@ -7,7 +7,8 @@ import { useAudioPlayer } from "../context/AudioPlayerContext";
 import AudioControl from "./AudioControl";
 
 export default function AudioPlayer() {
-  const { currentTrack, isPlaying, play, pause, togglePlay } = useAudioPlayer();
+  const { currentTrack, isPlaying, play, pause, next, previous } =
+    useAudioPlayer();
 
   const actionPlayButton = () => {
     if (isPlaying) {
@@ -18,19 +19,30 @@ export default function AudioPlayer() {
   };
 
   return (
-    <div className="m-auto flex flex-col w-screen">
-      <div>
+    <div className="m-auto flex flex-col py-2 rounded-xl">
+      <div
+        className={`${
+          isPlaying ? "animate-marquee" : ""
+        } text-main opacity-80 font-playfair`}
+      >
         {currentTrack?.title} - {currentTrack?.artist}
       </div>
       <div>
         <AudioControl />
       </div>
       <div className="m-auto flex w-screen justify-center gap-8">
-        <img src={Left} width={30} alt="previous track" />
-        <button onClick={actionPlayButton}>
+        <button onClick={previous} className="bg-transparent">
+          <img src={Left} width={30} alt="previous track" />
+        </button>
+        <button
+          onClick={actionPlayButton}
+          className="hover:border-transparent bg-transparent outline-none"
+        >
           <img src={!isPlaying ? Play : Pause} width={40} alt="play button" />
         </button>
-        <img src={Right} width={30} alt="next track" />
+        <button onClick={next} className="bg-transparent">
+          <img src={Right} width={30} alt="next track" />
+        </button>
       </div>
     </div>
   );

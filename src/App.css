@@ -1,12 +1,58 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@layer base {
+  @font-face {
+    font-family: "Playfair";
+    font-style: normal;
+    font-weight: 400;
+    src: url("../public/fonts/PlayfairDisplay-Regular.ttf") format("truetype");
+  }
+}
+
+header {
+  background: linear-gradient(
+    281deg,
+    rgba(2, 0, 36, 1) 0%,
+    rgba(170, 81, 86, 1) 35%,
+    rgba(64, 70, 66, 1) 36%
+  );
+}
 
 #root {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 0rem;
   text-align: center;
+}
+input[type="range"] {
+  @apply appearance-none;
+}
+button:focus,
+button:active {
+  outline: none;
+  box-shadow: none;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  @apply bg-main rounded-3xl h-2;
+}
+
+input[type="range"]::-moz-range-track {
+  @apply bg-main;
+}
+
+input[type="range"]::-ms-track {
+  @apply bg-main;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  @apply appearance-none w-2 h-2 bg-yellow-300 rounded-full cursor-pointer;
+  /* Adjust to align the thumb with the track */
+}
+
+input[type="range"]::-moz-range-thumb {
+  @apply w-4 h-4 bg-main rounded-full cursor-pointer;
 }
 
 .logo {
