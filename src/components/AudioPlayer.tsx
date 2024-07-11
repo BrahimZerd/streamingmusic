@@ -19,7 +19,7 @@ export default function AudioPlayer() {
   };
 
   return (
-    <div className="m-auto flex flex-col py-2 rounded-xl">
+    <div className="m-auto flex flex-col py-2 rounded-xl h-[20vh]">
       <div
         className={`${
           isPlaying ? "animate-marquee" : ""

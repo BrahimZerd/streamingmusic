@@ -18,6 +18,53 @@ header {
     rgba(64, 70, 66, 1) 36%
   );
 }
+#slider {
+  background: radial-gradient(
+    rgba(64, 70, 66, 1) 0%,
+    rgba(170, 81, 86, 1) 5%,
+    rgb(133, 129, 219) 36%
+  );
+}
+.colorful-text {
+  display: inline-block;
+  animation: colorChange 3s infinite;
+}
+
+.colorful-text span {
+  animation: inherit;
+  display: inline-block;
+}
+@keyframes colorChange {
+  0%,
+  100% {
+    color: rgb(133, 129, 219);
+  }
+  25% {
+    color: rgba(64, 70, 66, 1);
+  }
+  50% {
+    color: rgba(170, 81, 86, 1);
+  }
+}
+
+.colorful-text span:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.colorful-text span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.colorful-text span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.colorful-text span:nth-child(4) {
+  animation-delay: 0.4s;
+}
+.colorful-text span:nth-child(5) {
+  animation-delay: 0.5s;
+}
+.colorful-text span:nth-child(6) {
+  animation-delay: 0.6s;
+}
 
 #root {
   max-width: 1280px;
